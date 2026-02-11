@@ -7,6 +7,8 @@ String phoneNumber;
 double height;
 int weight;
 LocalDate birthDay;
+double bmi;
+String formatBmi;
 
 void main(String[] args) {
     printMenu();
@@ -17,6 +19,7 @@ void main(String[] args) {
     setPhoneNumber();
     setHeight();
     setWeight();
+    calculateBmi();
     setBirthDay();
     printProfile();
     IO.println("Afsluiten. Tot ziens!");
@@ -46,9 +49,11 @@ void printProfile() {
     IO.println("Email: " + email);
     IO.println("Adres: " + address);
     IO.println("Telefoonnummer: " + phoneNumber);
-    IO.println("lengte: " + height);
-    IO.println("gewicht: " + weight);
-    IO.println("birthday: " + birthDay);
+    IO.println("lengte: " + height + "CM");
+    IO.println("gewicht: " + weight + "KG");
+    IO.println("Bmi: " + formatBmi);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    IO.println("birthday: " + birthDay.format(formatter));
 
 
 
@@ -74,7 +79,15 @@ void setAge(){
 void setEmail(){
     IO.println("Vul hier je e-mail in: ");
     email = IO.readln();
-    IO.println("Email opgeslagen: " + email);
+    if (email.contains("@")) {
+        IO.println("Geldige email");
+        IO.println("Email opgeslagen: " + email);
+    } else {
+        IO.println("Ongeldige email! (Email bevat geen: @");
+        IO.println("Try again");
+        setEmail();
+    }
+
 }
 
 void setAddress(){
@@ -83,34 +96,48 @@ void setAddress(){
     IO.println("Adres opgeslagen: " + address);
 }
 
-void setPhoneNumber(){
+void setPhoneNumber() {
     IO.println("Vul hier je telefoonnummer in: ");
     phoneNumber = IO.readln();
-    IO.println("Telefoonnummer opgeslagen: " + phoneNumber);
+    if (phoneNumber.length() == 10) {
+        IO.println("Telefoonnummer opgeslagen: " + phoneNumber);
+    } else {
+        IO.println("Telefoonnummer bevat geen 10 cijfers!");
+        IO.println("Try again");
+        setPhoneNumber();
+    }
 }
 
 void setHeight(){
     IO.println("Vul hier je lengte in (cm): ");
-    height = Double.parseDouble(IO.readln());
-    IO.println("Lengte opgeslagen: " + height);
+    height = Integer.parseInt(IO.readln());
+    IO.println("Lengte opgeslagen: " + height + "CM");
 }
 
 void setWeight(){
     IO.println("Vul hier je gewicht in (kg): ");
     weight = Integer.parseInt(IO.readln());
-    IO.println("Gewicht opgeslagen: " + weight);
+    IO.println("Gewicht opgeslagen: " + weight + "KG");
 }
 
 void setBirthDay(){
     IO.println("Voer het jaar van je geboortedag in: ");
-    int day = Integer.parseInt(IO.readln());
-    IO.println("Voer de maand van je geboortedag in: ");
+    int year = Integer.parseInt(IO.readln());
+    IO.println("Voer de maand van je geboortedag in (in cijfers): ");
     int month = Integer.parseInt(IO.readln());
     IO.println("Voer het dag van je geboortedag in: ");
-    int year = Integer.parseInt(IO.readln());
-    birthDay = LocalDate.of(day, month, year);
-    IO.println("Verjaardag opgeslagen: " + birthDay);
+    int day = Integer.parseInt(IO.readln());
+    birthDay = LocalDate.of(year, month, day);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    IO.println("Verjaardag opgeslagen: " + birthDay.format(formatter));
 }
+void calculateBmi(){
+    double heightInMeters = height / 100;
+    bmi = weight / (heightInMeters * heightInMeters);
+    formatBmi = String.format("%.2f", bmi);
+    IO.println("BMI opgeslagen: " + formatBmi);
+}
+
 
 
 
